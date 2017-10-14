@@ -30,13 +30,14 @@ func main() {
   } else if argFlag == "-s" {
     argString1 := os.Args[2]
     argString2 := os.Args[3]
-    fmt.Println(argString1, argString2)
+    //fmt.Println(argString1, argString2)
     a = []byte(argString1)
     b = []byte(argString2)
-    fmt.Println(a[:], b[:])
+    //fmt.Println(a[:], b[:])
     z = XorBytes(a[:], b[:])
-    //outString := string(z[:])
+    outString := string(z[:])
     fmt.Println(z[:])
+    fmt.Println(outString)
   }
 }
 
@@ -67,8 +68,8 @@ func XorBytes(a []byte, b []byte) []byte {
   var byte_dst [20]byte
   //fmt.Println(a[:])
   //fmt.Println(b[:])
-  fmt.Println(len(a))
-  fmt.Println(len(b))
+  //fmt.Println(len(a))
+  //fmt.Println(len(b))
 	for i := 0; i < n; i++ {
     //fmt.Println(i)
 		byte_dst[i] = a[i] ^ b[i]
