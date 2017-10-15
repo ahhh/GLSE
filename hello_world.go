@@ -25,7 +25,7 @@ func main(){
 type stringPair interface {
   string() string
 }
-// create a struct named pair with two fields, ints named x and y.
+// create a struct named pair with two fields
 type pair struct {
   x, y float64
 }
