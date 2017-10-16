@@ -7,7 +7,7 @@ import(
 )
 
 func helpMenu(){
-    fmt.Println("Usage: ./run_cmd hostname -a")
+  fmt.Println("Usage: ./run_cmd hostname -a")
 }
 
 func main() {
@@ -26,9 +26,9 @@ func main() {
 }
 
 func RunCommand(cmd string, args []string) (string, error) {
-	out, err := exec.Command(cmd, args...).CombinedOutput()
-	if err != nil {
-		return string(out), err
-	}
-	return string(out), nil
+  out, err := exec.Command(cmd, args...).CombinedOutput()
+  if err != nil {
+    return string(out), err
+  }
+  return string(out), nil
 }
