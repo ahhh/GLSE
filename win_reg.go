@@ -52,66 +52,66 @@ func main() {
 
 // CreateKeyAndValue creates a new regestry key in a dynamic hive, dynamic path, dynamic object, and infers the type as either string or uint32 and creats the correct key type accordingly
 func CreateKeyAndValue(hive reg.Key, keyPath string, keyObject string, keyValue interface{}) {
-	// Create our key or see if it exists
-	k, _, err := reg.CreateKey(hive, keyPath, reg.ALL_ACCESS)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	// regardless if its new or created it we set it to our value
-	defer k.Close()
-	// switch on keyValue type to create different key type values
-	switch v := keyValue.(type) {
-	case string:
-		keyValueSZ := keyValue.(string)
-		k.SetStringValue(keyObject, keyValueSZ)
-	case uint32:
-		keyValueUI32 := keyValue.(uint32)
-		k.SetDWordValue(keyObject, keyValueUI32)
-	default:
-		vstring := fmt.Sprintf("Info: %v", v)
-		fmt.Println(vstring)
-	}
+  // Create our key or see if it exists
+  k, _, err := reg.CreateKey(hive, keyPath, reg.ALL_ACCESS)
+  if err != nil {
+    fmt.Println(err)
+    return
+  }
+  // regardless if its new or created it we set it to our value
+  defer k.Close()
+  // switch on keyValue type to create different key type values
+  switch v := keyValue.(type) {
+    case string:
+      keyValueSZ := keyValue.(string)
+      k.SetStringValue(keyObject, keyValueSZ)
+    case uint32:
+      keyValueUI32 := keyValue.(uint32)
+      k.SetDWordValue(keyObject, keyValueUI32)
+    default:
+      vstring := fmt.Sprintf("Info: %v", v)
+      fmt.Println(vstring)
+  }
 }
 
 // DeleteKeysValue deletes a dynamic keyobject in a dynamic hive and path
 func DeleteKeysValue(hive reg.Key, keypath string, keyobject string) {
-	k, err := reg.OpenKey(hive, keypath, reg.ALL_ACCESS)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer k.Close()
-	k.DeleteValue(keyobject)
+  k, err := reg.OpenKey(hive, keypath, reg.ALL_ACCESS)
+  if err != nil {
+    fmt.Println(err)
+    return
+  }
+  defer k.Close()
+  k.DeleteValue(keyobject)
 }
 
 func ForceHiddenFiles() {
   var value uint32 = 0
-	var value1 uint32 = 1
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\NOHIDDEN`, "CheckedValue", value)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\NOHIDDEN`, "DefaultValue", value)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SHOWALL`, "CheckedValue", value)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SHOWALL`, "DefaultValue", value)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SuperHidden`, "CheckedValue", value)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SuperHidden`, "DefaultValue", value)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `Software\Microsoft\Windows\CurrentVersion\Policies\Explorer`, "NoFolderOptions", value1)
+  var value1 uint32 = 1
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\NOHIDDEN`, "CheckedValue", value)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\NOHIDDEN`, "DefaultValue", value)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SHOWALL`, "CheckedValue", value)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SHOWALL`, "DefaultValue", value)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SuperHidden`, "CheckedValue", value)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SuperHidden`, "DefaultValue", value)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `Software\Microsoft\Windows\CurrentVersion\Policies\Explorer`, "NoFolderOptions", value1)
 }
 func ForceNoHiddenFiles() {
-	var value uint32 = 0
-	var value1 uint32 = 1
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\NOHIDDEN`, "CheckedValue", value1)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\NOHIDDEN`, "DefaultValue", value1)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SHOWALL`, "CheckedValue", value1)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SHOWALL`, "DefaultValue", value1)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SuperHidden`, "CheckedValue", value1)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SuperHidden`, "DefaultValue", value1)
-	CreateKeyAndValue(reg.LOCAL_MACHINE, `Software\Microsoft\Windows\CurrentVersion\Policies\Explorer`, "NoFolderOptions", value)
+  var value uint32 = 0
+  var value1 uint32 = 1
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\NOHIDDEN`, "CheckedValue", value1)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\NOHIDDEN`, "DefaultValue", value1)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SHOWALL`, "CheckedValue", value1)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SHOWALL`, "DefaultValue", value1)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SuperHidden`, "CheckedValue", value1)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Hidden\SuperHidden`, "DefaultValue", value1)
+  CreateKeyAndValue(reg.LOCAL_MACHINE, `Software\Microsoft\Windows\CurrentVersion\Policies\Explorer`, "NoFolderOptions", value)
 }
 
 // Persist to User RunOnceKey
 func PersistUserRunOnce(myKey string, myExe string) {
-	CreateKeyAndValue(reg.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\RunOnce`, myKey, myExe)
+  CreateKeyAndValue(reg.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\RunOnce`, myKey, myExe)
 }
 func FixUserRunOnce(myKey string) {
-	DeleteKeysValue(reg.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\RunOnce`, myKey)
+  DeleteKeysValue(reg.CURRENT_USER, `Software\Microsoft\Windows\CurrentVersion\RunOnce`, myKey)
 }
