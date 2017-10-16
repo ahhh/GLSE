@@ -62,19 +62,19 @@ func XorFiles(file1 string, file2 string, outPut string) error {
 
 func XorBytes(a []byte, b []byte) []byte {
   n := len(a)
-	if len(b) < n {
-		n = len(b)
-	}
+  if len(b) < n {
+    n = len(b)
+  }
   var byte_dst [20]byte
   //fmt.Println(a[:])
   //fmt.Println(b[:])
   //fmt.Println(len(a))
   //fmt.Println(len(b))
-	for i := 0; i < n; i++ {
+  for i := 0; i < n; i++ {
     //fmt.Println(i)
-		byte_dst[i] = a[i] ^ b[i]
-	}
-	return byte_dst[:]
+    byte_dst[i] = a[i] ^ b[i]
+  }
+  return byte_dst[:]
 }
 
 func CreateFile(bytes []byte, path string) error {
