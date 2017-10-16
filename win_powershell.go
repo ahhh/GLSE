@@ -74,5 +74,5 @@ func RunPowerShell(cmd string) {
 //  if err != nil {
 //    return "", err
 //  }
-//return base64.StdEncoding.EncodeToString([]byte(encoded)), nil
+//  return base64.StdEncoding.EncodeToString([]byte(encoded)), nil
 //}
