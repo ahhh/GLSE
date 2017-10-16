@@ -23,19 +23,19 @@ func main() {
 
 // Silly server defined on a specific port w/ certain paths and functions
 func EZServer(port string) {
-    go func() {
-        http.HandleFunc("/", hello_world)
-        http.HandleFunc("/cmd", cmd)
-        err := http.ListenAndServe(port, nil)
-        if err != nil {
-          fmt.Println(err)
-        }
-    }()
+  go func() {
+    http.HandleFunc("/", hello_world)
+    http.HandleFunc("/cmd", cmd)
+    err := http.ListenAndServe(port, nil)
+    if err != nil {
+      fmt.Println(err)
+    }
+  }()
 }
 // example handlers
 func hello_world(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Hello world!")
+  io.WriteString(w, "Hello world!")
 }
 func cmd(w http.ResponseWriter, r *http.Request ) {
-	io.WriteString(w, strCmd)
+  io.WriteString(w, strCmd)
 }
