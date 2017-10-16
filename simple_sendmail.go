@@ -61,7 +61,7 @@ func sendSampleEmail() {
   }
   defer c.Close()
   m := gomail.NewMessage()
-  m.SetHeader("From", "obama@whitehouse.gov", "Barrak Obama")
+  m.SetHeader("From", "obama@whitehouse.gov", "Barack Obama")
   m.SetHeader("To", "test11@mailinator.com")
   //m.SetHeader("Bcc", userList...)
   m.SetHeader("Subject", "Thanks for Subscribing!")
