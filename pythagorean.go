@@ -20,11 +20,9 @@ func main(){
   if legA, err = strconv.Atoi(leg1); err != nil {
     panic(err)
   }
-
   if legB, err = strconv.Atoi(leg2); err != nil {
-      panic(err)
-    }
-
+    panic(err)
+  }
   fmt.Println(int(legA), int(legB))
   hypotenuse := math.Sqrt(math.Pow(float64(legA),2) + math.Pow(float64(legB),2))
   fmt.Println(hypotenuse)
