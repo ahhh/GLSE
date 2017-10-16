@@ -8,9 +8,9 @@ type PosPeaks struct {
 }
 
 func main() {
-	datArray := []int{7,1,2,7,9,43,2,5,7,9,0,3,4,1,4}
-	myPeaks := PickPeaks(datArray)
-	fmt.Println(myPeaks)
+  datArray := []int{7,1,2,7,9,43,2,5,7,9,0,3,4,1,4}
+  myPeaks := PickPeaks(datArray)
+  fmt.Println(myPeaks)
 }
 
 func PickPeaks(array []int) PosPeaks {
@@ -36,5 +36,5 @@ func PickPeaks(array []int) PosPeaks {
     pos = make([]int, 0)
     peaks = make([]int, 0)
   }
-	return PosPeaks{pos, peaks}
+  return PosPeaks{pos, peaks}
 }
