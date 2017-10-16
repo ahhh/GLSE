@@ -11,38 +11,38 @@ func main() {
 }
 
 func GetMACAddress() string {
-	addrs, err := net.InterfaceAddrs()
-	if err != nil {
-		fmt.Println(err)
-	}
+  addrs, err := net.InterfaceAddrs()
+  if err != nil {
+    fmt.Println(err)
+  }
 
-	var currentIP, currentNetworkHardwareName string
+  var currentIP, currentNetworkHardwareName string
 
-	for _, address := range addrs {
-		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-			if ipnet.IP.To4() != nil {
-				currentIP = ipnet.IP.String()
-			}
-		}
-	}
+  for _, address := range addrs {
+    if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+      if ipnet.IP.To4() != nil {
+        currentIP = ipnet.IP.String()
+      }
+    }
+  }
 
-	interfaces, _ := net.Interfaces()
-	for _, interf := range interfaces {
+  interfaces, _ := net.Interfaces()
+  for _, interf := range interfaces {
 
-		if addrs, err := interf.Addrs(); err == nil {
-			for _, addr := range addrs {
-				if strings.Contains(addr.String(), currentIP) {
-					currentNetworkHardwareName = interf.Name
-				}
-			}
-		}
-	}
+    if addrs, err := interf.Addrs(); err == nil {
+      for _, addr := range addrs {
+        if strings.Contains(addr.String(), currentIP) {
+          currentNetworkHardwareName = interf.Name
+        }
+      }
+    }
+  }
 
-	netInterface, err := net.InterfaceByName(currentNetworkHardwareName)
-	if err != nil {
-		fmt.Println(err)
-	}
+  netInterface, err := net.InterfaceByName(currentNetworkHardwareName)
+  if err != nil {
+    fmt.Println(err)
+  }
 
-	macAddress := netInterface.HardwareAddr
-	return macAddress.String()
+  macAddress := netInterface.HardwareAddr
+  return macAddress.String()
 }
