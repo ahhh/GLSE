@@ -32,7 +32,6 @@ func main() {
       } else {
         fmt.Println("APR1 Hash: ", apr1)
       }
-    // Our Unhide hidden files in Explorer option
     } else if os.Args[1] == "-md5"{
       md5, err := GenShadowHash(os.Args[2], "md5")
       if err != nil {
@@ -40,7 +39,6 @@ func main() {
       } else {
         fmt.Println("MD5 Hash: ", md5)
       }
-    // Our Unhide hidden files in Explorer option
     } else if os.Args[1] == "-sha256"{
       sha256, err := GenShadowHash(os.Args[2], "sha256")
       if err != nil {
@@ -48,7 +46,6 @@ func main() {
       } else {
         fmt.Println("SHA256 Hash: ", sha256)
       }
-    // Our Unhide hidden files in Explorer option
     } else if os.Args[1] == "-sha512" {
       sha512, err := GenShadowHash(os.Args[2], "sha512")
       if err != nil {
