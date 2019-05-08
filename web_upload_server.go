@@ -1,4 +1,4 @@
-# Largly taken from https://gist.github.com/anujsinghwd/a5b07db628012b99f875a431d081a490
+// Largly taken from https://gist.github.com/anujsinghwd/a5b07db628012b99f875a431d081a490
 package main
 
 import (
